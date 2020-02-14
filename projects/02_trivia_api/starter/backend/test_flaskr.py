@@ -15,7 +15,8 @@ class TriviaTestCase(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "trivia_test"
-        self.database_path = "postgres://{}@{}/{}".format('postgres:123', 'localhost:5432', self.database_name)
+        self.database_path = "postgres://{}@{}/{}".format
+        ('postgres:123', 'localhost:5432', self.database_name)
         setup_db(self.app, self.database_path)
 
         self.new_question = {
@@ -31,14 +32,15 @@ class TriviaTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-    
+
     def tearDown(self):
         """Executed after reach test"""
         pass
 
     """
     TODO
-    Write at least one test for each test for successful operation and for expected errors.
+    Write at least one test for each test for
+    successful operation and for expected errors.
     """
 
     def test_get_categories(self):
@@ -52,7 +54,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_get_paginated_questions(self):
         res = self.client().get("/questions")
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue(data["current_questions"])
@@ -63,7 +65,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_404_sent_requesting_beyond_valid_page_for_questions(self):
         res = self.client().get("/questions?page=10000")
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 404)
@@ -71,14 +73,16 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_delete_question(self):
         # add test question to be deleted
-        test_question = Question(question="test", answer="test", category=1, difficulty=1)
+        test_question = Question
+        (question="test", answer="test", category=1, difficulty=1)
         test_question.insert()
         test_question_id = test_question.id
 
         res = self.client().delete('/questions/<int:test_question_id}')
         data = json.loads(res.data)
 
-        question = Question.query.filter(Question.id == test_question_id).one_or_none()
+        question = Question.query.filter
+        (Question.id == test_question_id).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -93,7 +97,7 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['error'], 422)
-        self.assertEqual(data['message'], 'The request was well-formed but was unable to be followed due to semantic errors.')
+        self.assertEqual(data['message'], 'semantic errors.')
 
     def test_add_new_question(self):
         res = self.client().post("/questions", json=self.new_question)
@@ -142,7 +146,7 @@ class TriviaTestCase(unittest.TestCase):
         search_term = {"searchTerm": "jnjnjnjnjnjnjnjnjn"}
         res = self.client().post("/questions", json=search_term)
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertEqual(len(data["search_result"]), 0)
@@ -161,7 +165,7 @@ class TriviaTestCase(unittest.TestCase):
     def test_400_if_the_category_is_not_valid(self):
         res = self.client().get("/categories/1000/questions")
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["success"], False)
         self.assertEqual(data["error"], 400)
@@ -174,11 +178,12 @@ class TriviaTestCase(unittest.TestCase):
         }
         res = self.client().post("/quizzes", json=posted_data)
         data = json.loads(res.data)
-        
+
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data["success"], True)
         self.assertTrue(data["question"])
-        # validate that the returned question of the same category I have selected
+        # validate that the returned question
+        # of the same category I have selected
         self.assertEqual(data["question"]["category"], 6)
 
     def test_400_post_invalid_category_for_quiz(self):
