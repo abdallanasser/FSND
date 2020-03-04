@@ -47,8 +47,6 @@ From within the `backend` directory first ensure you are working using your crea
 To run the server, execute:
 
 ```bash
-export DB_USER="your database username" // e.g postgres
-export DB_PASS="your database password"
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 flask run
