@@ -11,7 +11,7 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
-'''
+''' 
 @TODO uncomment the following line to initialize the datbase
 !! NOTE THIS WILL DROP ALL RECORDS AND START YOUR DB FROM SCRATCH
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
@@ -55,7 +55,7 @@ def get_drinks():
 '''
 
 @app.route('/drinks-detail')
-@requires_auth('get:drinks_detail')
+@requires_auth(permission='get:drinks_detail')
 def get_drink_detail(payload):
     drinks = Drink.query.all()
 
@@ -82,7 +82,7 @@ def get_drink_detail(payload):
 '''
 
 @app.route('/drinks', methods=["POST"])
-@requires_auth('post:drinks')
+@requires_auth(permission='post:drinks')
 def create_drink(payload):
     body = request.get_json()
     title = body.get('title', None)
@@ -102,7 +102,7 @@ def create_drink(payload):
         return jsonify({
             "success": True, "drinks": drink.long()
         })
-    except:
+    except Exception:
         abort(422)
 
 '''
@@ -118,7 +118,7 @@ def create_drink(payload):
 '''
 
 @app.route('/drinks/<int:id>', methods=["PATCH"])
-@requires_auth("patch:drinks")
+@requires_auth(permission='patch:drinks')
 def patch_drinks_details(payload, id):
     try:
         body = request.get_json()
@@ -140,7 +140,7 @@ def patch_drinks_details(payload, id):
         return jsonify({
             "success": True, "drinks": drink.long()
         })
-    except:
+    except Exception:
         abort(422)
 
 '''
@@ -155,7 +155,7 @@ def patch_drinks_details(payload, id):
 '''
 
 @app.route('/drinks/<int:id>', methods=['DELETE'])
-@requires_auth('delete:drinks')
+@requires_auth(permission='delete:drinks')
 def delete_drinks(payload, id):
     try:
         drink = Drink.query.filter(Drink.id == id).one_or_none()
@@ -168,7 +168,7 @@ def delete_drinks(payload, id):
         return jsonify({
             "success": True, "delete": id
         })
-    except:
+    except Exception:
         abort(422)
 
 ## Error Handling
